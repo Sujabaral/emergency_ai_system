@@ -1,72 +1,67 @@
-# severity_rules.yaml
-
-
 severity_levels:
-
-P1:
-  threshold: 0.60
-
-  keywords:
-    - "fatal"
-    - "down"
-    - "oom"
-    - "outage"
-    - "crash"
-    - "unresponsive"
-    - "data loss"
-    - "security breach"
-    - "breach"
-    - "compromised"
-    - "exploit"
-    - "vulnerability"
-    - "critical"
-
-  patterns:
-    - ".database.*down.*"
-    - ".*service.*unresponsive.*"
-    - ".*application.*crash.*"
-    - ".critical.*error.*"
-    - ".*fatal.*exception.*"
-    - ".*security.*breach.*"
-    - ".*data.*loss.*"
-    - ".*vulnerability.*exploit.*"
-    - ".*compromised.*"
-    - ".*outage.*"
-    - ".*oom.*"
-    - ".*memory.*leak.*"
-
-
-P2:  # High — serious degradation, repeated failures
-    threshold: 0.50  # ~2+ keywords must match
+  P1:
+    threshold: 0.15   # ~2 strong keywords out of 13 is sufficient for critical alert
     keywords:
-      - "error"
-      - "exception"
-      - "failed"
-      - "timeout"
-      - "unreachable"
-      - "overload"
+      - fatal
+      - down
+      - oom
+      - outage
+      - crash
+      - unresponsive
+      - data loss
+      - security breach
+      - breach
+      - compromised
+      - exploit
+      - vulnerability
+      - critical
+    patterns:
+      - ".*database.*down.*"
+      - ".*service.*unresponsive.*"
+      - ".*application.*crash.*"
+      - ".*critical.*error.*"
+      - ".*fatal.*exception.*"
+      - ".*security.*breach.*"
+      - ".*data.*loss.*"
+      - ".*vulnerability.*exploit.*"
+      - ".*compromised.*"
+      - ".*outage.*"
+      - ".*oom.*"
+      - ".*memory.*leak.*"
+
+  P2:
+    threshold: 0.25   # ~2 keywords out of 7 is sufficient for high alert
+    keywords:
+      - error
+      - exception
+      - failed
+      - timeout
+      - unprocessable
+      - unreachable
+      - overload
     patterns:
       - ".*connection.*refused.*"
       - ".*memory.*threshold.*exceeded.*"
 
-  P3:  # Medium warnings that need attention soon
-    threshold: 0.40  # 1+ keyword must match (source weight alone won't clear this)
+  P3:
+    threshold: 0.40   # ~2-3 keywords out of 5
     keywords:
-      - "warning"
-      - "slow"
-      - "degraded"
-      - "retry"
-      - "latency"
+      - warning
+      - slow
+      - degraded
+      - retry
+      - latency
     patterns:
       - ".*response.*time.*high.*"
 
-  P4:  # Low — informational, worth logging but not urgent
-    threshold: 0.25  # clears with source weight alone for trusted sources
+  P4:
+    threshold: 0.20   # just below the 0.25 a single P4 keyword scores, so lone
+                      # informational words don't trigger P4 classification early
     keywords:
-      - "notice"
-      - "info"
-      - "scheduled"
-      - "deploy"
+      - notice
+      - info
+      - scheduled
+      - deploy
     patterns: []
 
 source_weights:
@@ -76,6 +71,3 @@ source_weights:
   db: 0.70
   ticket: 0.40
   unknown: 0.30
-
-
-
