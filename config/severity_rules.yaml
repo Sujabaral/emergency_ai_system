@@ -1,0 +1,81 @@
+# severity_rules.yaml
+
+
+severity_levels:
+
+P1:
+  threshold: 0.60
+
+  keywords:
+    - "fatal"
+    - "down"
+    - "oom"
+    - "outage"
+    - "crash"
+    - "unresponsive"
+    - "data loss"
+    - "security breach"
+    - "breach"
+    - "compromised"
+    - "exploit"
+    - "vulnerability"
+    - "critical"
+
+  patterns:
+    - ".database.*down.*"
+    - ".*service.*unresponsive.*"
+    - ".*application.*crash.*"
+    - ".critical.*error.*"
+    - ".*fatal.*exception.*"
+    - ".*security.*breach.*"
+    - ".*data.*loss.*"
+    - ".*vulnerability.*exploit.*"
+    - ".*compromised.*"
+    - ".*outage.*"
+    - ".*oom.*"
+    - ".*memory.*leak.*"
+
+
+P2:  # High — serious degradation, repeated failures
+    threshold: 0.50  # ~2+ keywords must match
+    keywords:
+      - "error"
+      - "exception"
+      - "failed"
+      - "timeout"
+      - "unreachable"
+      - "overload"
+    patterns:
+      - ".*connection.*refused.*"
+      - ".*memory.*threshold.*exceeded.*"
+
+  P3:  # Medium warnings that need attention soon
+    threshold: 0.40  # 1+ keyword must match (source weight alone won't clear this)
+    keywords:
+      - "warning"
+      - "slow"
+      - "degraded"
+      - "retry"
+      - "latency"
+    patterns:
+      - ".*response.*time.*high.*"
+
+  P4:  # Low — informational, worth logging but not urgent
+    threshold: 0.25  # clears with source weight alone for trusted sources
+    keywords:
+      - "notice"
+      - "info"
+      - "scheduled"
+      - "deploy"
+    patterns: []
+
+source_weights:
+  sentry: 0.80
+  uptime_robot: 0.90
+  logs: 0.50
+  db: 0.70
+  ticket: 0.40
+  unknown: 0.30
+
+
+
